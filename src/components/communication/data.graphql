@@ -1,0 +1,89 @@
+query AllCommunications {
+  allCommunications {
+    ...CommunicationFields
+  }
+}
+
+query Communication($id: ID!) {
+  communication(id: $id) {
+    ...CommunicationFields
+  }
+}
+
+query CommunicationCalculations($communicationId: ID!) {
+  communicationCalculations(communicationId: $communicationId) {
+    ...CalculationFields
+  }
+}
+
+mutation CreateCommunication($input: CreateCommunicationInput!) {
+  createCommunication(input: $input) {
+    ...CommunicationFields
+  }
+}
+
+mutation AddCalculation($input: AddCalculationInput!) {
+  addCalculation(input: $input) {
+    ...CalculationFields
+  }
+}
+
+fragment CommunicationFields on Communication {
+  id
+  startingNumber
+  title
+  currentResult
+  calculationCount
+  participantCount
+  createdAt
+  updatedAt
+  calculations {
+    ...CalculationFields
+  }
+  author {
+    ...UserFields
+  }
+}
+
+fragment CalculationFields on Calculation {
+  id
+  leftOperand
+  operation
+  rightOperand
+  result
+  createdAt
+  parentCalculationId
+  author {
+    ...UserFields
+  }
+}
+
+
+fragment UserFields on User {
+  id
+  username
+  email
+  isActive
+  createdAt
+  updatedAt
+}
+
+
+subscription CommunicationUpdated($communicationId: ID!) {
+  communicationUpdated(communicationId: $communicationId) {
+    ...CommunicationFields
+  }
+}
+
+
+subscription CommunicationCreated {
+  communicationCreated {
+    ...CommunicationFields
+  }
+}
+
+subscription CalculationAdded($communicationId: ID!) {
+  calculationAdded(communicationId: $communicationId) {
+    ...CalculationFields
+  }
+}

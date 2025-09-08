@@ -1,8 +1,10 @@
 // src/lib/apollo-client.ts
 import { ApolloClient, ApolloError, ApolloLink, createHttpLink, FetchResult, InMemoryCache, Operation, split } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import { getMainDefinition, isNonNullObject, Observable } from '@apollo/client/utilities';
 import { Client, createClient } from 'graphql-ws';
 import { print } from 'graphql';
+import Cookies from 'js-cookie';
 
 interface LikeCloseEvent {
   readonly code: number;
@@ -51,6 +53,17 @@ class GraphQLWsLink extends ApolloLink {
 
 const httpLink = (apiUrl: string) => createHttpLink({ uri: `${apiUrl}/graphql` });
 
+// Auth link to add authorization header
+const authLink = setContext((_, { headers }) => {
+  const token = Cookies.get('auth_token');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
+  };
+});
+
 // Create a WebSocket link:
 const wsLink = (wsUrl: string, token?: string) => {
   return new GraphQLWsLink(
@@ -68,7 +81,8 @@ const wsLink = (wsUrl: string, token?: string) => {
 
 // using the ability to split links, you can send data to each link
 // depending on what kind of operation is being sent
-const getLink = (API_URL: string, WS_URL: string, token?: string) => {
+const getLink = (API_URL: string, WS_URL: string) => {
+  const token = Cookies.get('auth_token');
   return split(
     // split based on operation type
     ({ query }) => {
@@ -76,15 +90,13 @@ const getLink = (API_URL: string, WS_URL: string, token?: string) => {
       return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
     },
     wsLink(WS_URL, token),
-    httpLink(API_URL)
+    authLink.concat(httpLink(API_URL))
   );
 }
 
 
 const apolloClient = new ApolloClient({
-  link: ApolloLink.from([
-    getLink('http://localhost:8000', 'ws://localhost:8000/graphql'),
-  ]),
+  link: getLink('http://localhost:8000', 'ws://localhost:8000/graphql'),
   cache: new InMemoryCache(),
   connectToDevTools: true,
 });

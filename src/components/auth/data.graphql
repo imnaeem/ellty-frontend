@@ -1,0 +1,47 @@
+mutation Login($input: LoginInput!) {
+  login(input: $input) {
+    token
+    user {
+      id
+      username
+      email
+      isActive
+      createdAt
+      updatedAt
+    }
+  }
+}
+
+mutation Register($input: CreateUserInput!) {
+  register(input: $input) {
+    token
+    user {
+      id
+      username
+      email
+      isActive
+      createdAt
+      updatedAt
+    }
+  }
+}
+
+query Me {
+  me {
+    id
+    username
+    email
+    isActive
+    createdAt
+    updatedAt
+  }
+}
+
+fragment UserFields on User {
+  id
+  username
+  email
+  isActive
+  createdAt
+  updatedAt
+}
