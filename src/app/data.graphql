@@ -1,0 +1,27 @@
+fragment UserFields on User {
+  id
+  username
+  email
+}
+
+query GetAllUsers {
+  allUsers {
+    ...UserFields
+  }
+}
+
+query GetAllRoles {
+  allRoles {
+    id
+    name
+    users {
+      ...UserFields
+    }
+  }
+}
+
+subscription OnUserCreated {
+  userCreated {
+    ...UserFields
+  }
+}
