@@ -6,6 +6,9 @@ import { Client, createClient } from 'graphql-ws';
 import { print } from 'graphql';
 import Cookies from 'js-cookie';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8000/graphql';
+
 interface LikeCloseEvent {
   readonly code: number;
   readonly reason: string;
@@ -96,7 +99,7 @@ const getLink = (API_URL: string, WS_URL: string) => {
 
 
 const apolloClient = new ApolloClient({
-  link: getLink('http://localhost:8000', 'ws://localhost:8000/graphql'),
+  link: getLink(API_URL, WS_URL),
   cache: new InMemoryCache(),
   connectToDevTools: true,
 });
