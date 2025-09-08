@@ -82,24 +82,21 @@ export const CalculationHistory: React.FC<CalculationHistoryProps> = ({
     }
   };
 
-  // Build tree structure for calculations
   const buildCalculationTree = (calculations: CommunicationCalculationsQuery['communicationCalculations']) => {
     const tree: CommunicationCalculationsQuery['communicationCalculations'] = [];
     const calcMap = new Map<string, {calc: CommunicationCalculationsQuery['communicationCalculations'][0], children: CommunicationCalculationsQuery['communicationCalculations'], level: number}>();
 
-    // Initialize all calculations with children array and level
     calculations.forEach(calc => {
       calcMap.set(calc.id, { calc, children: [], level: 0 });
     });
 
-    // Build parent-child relationships and set levels
     calculations.forEach(calc => {
       const calcWithChildren = calcMap.get(calc.id)!;
       
       if (calc.parentCalculationId) {
         const parent = calcMap.get(calc.parentCalculationId);
         if (parent) {
-          calcWithChildren.level = Math.min(parent.level + 1, 2); // Max 2 levels deep
+          calcWithChildren.level = Math.min(parent.level + 1, 2);
           parent.children.push(calcWithChildren.calc);
         } else {
           tree.push(calcWithChildren.calc);
@@ -134,8 +131,7 @@ export const CalculationHistory: React.FC<CalculationHistoryProps> = ({
       if (result.data?.addCalculation) {
         setNumberInput('');
       }
-    } catch (error) {
-      // Error adding calculation
+    } catch {
     } finally {
       setIsSubmitting(false);
     }
@@ -145,7 +141,7 @@ export const CalculationHistory: React.FC<CalculationHistoryProps> = ({
     const calc = calcWithChildren.calc;
     const config = operationIcons[calc.operation];
     const IconComponent = config.icon;
-    const marginLeft = calcWithChildren.level * 32; // 32px per level
+    const marginLeft = calcWithChildren.level * 32;
 
     return (
       <div key={calc.id} className="space-y-3">
@@ -170,7 +166,7 @@ export const CalculationHistory: React.FC<CalculationHistoryProps> = ({
             </div>
             
             <div className="flex items-center space-x-3 flex-wrap">
-              <span className="text-gray-900 font-medium">
+              {/* <span className="text-gray-900 font-medium">
                 {calc.leftOperand.toLocaleString()}
               </span>
               <span className={`font-bold ${config.color}`}>
@@ -179,7 +175,7 @@ export const CalculationHistory: React.FC<CalculationHistoryProps> = ({
               <span className="text-gray-900 font-medium">
                 {calc.rightOperand.toLocaleString()}
               </span>
-              <span className="text-gray-500">=</span>
+              <span className="text-gray-500">=</span> */}
               <span className="text-lg font-bold text-gray-900">
                 {calc.result.toLocaleString()}
               </span>
@@ -187,7 +183,6 @@ export const CalculationHistory: React.FC<CalculationHistoryProps> = ({
           </div>
         </div>
 
-        {/* Render children */}
         {calcWithChildren.children.map(child => renderCalculation({calc: child, children: [], level: calcWithChildren.level + 1}))}
       </div>
     );

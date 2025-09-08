@@ -91,11 +91,6 @@ export type CreateCommunicationInput = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type CreateRoleInput = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
-};
-
 export type CreateUserInput = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
@@ -110,9 +105,7 @@ export type LoginInput = {
 export type Mutation = {
   __typename?: 'Mutation';
   addCalculation: Calculation;
-  addUsersToRole?: Maybe<Role>;
   createCommunication: Communication;
-  createRole?: Maybe<Role>;
   createUser?: Maybe<User>;
   deleteUser?: Maybe<Scalars['Boolean']['output']>;
   login: AuthPayload;
@@ -126,19 +119,8 @@ export type MutationAddCalculationArgs = {
 };
 
 
-export type MutationAddUsersToRoleArgs = {
-  roleId: Scalars['ID']['input'];
-  userIds: Array<Scalars['ID']['input']>;
-};
-
-
 export type MutationCreateCommunicationArgs = {
   input: CreateCommunicationInput;
-};
-
-
-export type MutationCreateRoleArgs = {
-  input: CreateRoleInput;
 };
 
 
@@ -178,12 +160,10 @@ export enum Operation {
 export type Query = {
   __typename?: 'Query';
   allCommunications: Array<Communication>;
-  allRoles: Array<Role>;
   allUsers: Array<User>;
   communication?: Maybe<Communication>;
   communicationCalculations: Array<Calculation>;
   me?: Maybe<User>;
-  role?: Maybe<Role>;
   user?: Maybe<User>;
 };
 
@@ -198,30 +178,8 @@ export type QueryCommunicationCalculationsArgs = {
 };
 
 
-export type QueryRoleArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
 export type QueryUserArgs = {
   id: Scalars['ID']['input'];
-};
-
-/** Role entity */
-export type Role = {
-  __typename?: 'Role';
-  /** Role creation date */
-  createdAt: Scalars['String']['output'];
-  /** Role description */
-  description?: Maybe<Scalars['String']['output']>;
-  /** Unique Role ID */
-  id: Scalars['ID']['output'];
-  /** Unique Role name */
-  name: Scalars['String']['output'];
-  /** Role last update date */
-  updatedAt: Scalars['String']['output'];
-  /** Users in the Role */
-  users: Array<User>;
 };
 
 export type Subscription = {
@@ -304,117 +262,6 @@ export const CommunicationFieldsFragmentDoc = gql`
 }
     ${CalculationFieldsFragmentDoc}
 ${UserFieldsFragmentDoc}`;
-export const GetAllUsersDocument = gql`
-    query GetAllUsers {
-  allUsers {
-    ...UserFields
-  }
-}
-    ${UserFieldsFragmentDoc}`;
-
-/**
- * __useGetAllUsersQuery__
- *
- * To run a query within a React component, call `useGetAllUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAllUsersQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetAllUsersQuery(baseOptions?: Apollo.QueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, options);
-      }
-export function useGetAllUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, options);
-        }
-export function useGetAllUsersSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAllUsersQuery, GetAllUsersQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetAllUsersQuery, GetAllUsersQueryVariables>(GetAllUsersDocument, options);
-        }
-export type GetAllUsersQueryHookResult = ReturnType<typeof useGetAllUsersQuery>;
-export type GetAllUsersLazyQueryHookResult = ReturnType<typeof useGetAllUsersLazyQuery>;
-export type GetAllUsersSuspenseQueryHookResult = ReturnType<typeof useGetAllUsersSuspenseQuery>;
-export type GetAllUsersQueryResult = Apollo.QueryResult<GetAllUsersQuery, GetAllUsersQueryVariables>;
-export const GetAllRolesDocument = gql`
-    query GetAllRoles {
-  allRoles {
-    id
-    name
-    users {
-      ...UserFields
-    }
-  }
-}
-    ${UserFieldsFragmentDoc}`;
-
-/**
- * __useGetAllRolesQuery__
- *
- * To run a query within a React component, call `useGetAllRolesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllRolesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAllRolesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetAllRolesQuery(baseOptions?: Apollo.QueryHookOptions<GetAllRolesQuery, GetAllRolesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetAllRolesQuery, GetAllRolesQueryVariables>(GetAllRolesDocument, options);
-      }
-export function useGetAllRolesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllRolesQuery, GetAllRolesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetAllRolesQuery, GetAllRolesQueryVariables>(GetAllRolesDocument, options);
-        }
-export function useGetAllRolesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAllRolesQuery, GetAllRolesQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetAllRolesQuery, GetAllRolesQueryVariables>(GetAllRolesDocument, options);
-        }
-export type GetAllRolesQueryHookResult = ReturnType<typeof useGetAllRolesQuery>;
-export type GetAllRolesLazyQueryHookResult = ReturnType<typeof useGetAllRolesLazyQuery>;
-export type GetAllRolesSuspenseQueryHookResult = ReturnType<typeof useGetAllRolesSuspenseQuery>;
-export type GetAllRolesQueryResult = Apollo.QueryResult<GetAllRolesQuery, GetAllRolesQueryVariables>;
-export const OnUserCreatedDocument = gql`
-    subscription OnUserCreated {
-  userCreated {
-    ...UserFields
-  }
-}
-    ${UserFieldsFragmentDoc}`;
-
-/**
- * __useOnUserCreatedSubscription__
- *
- * To run a query within a React component, call `useOnUserCreatedSubscription` and pass it any options that fit your needs.
- * When your component renders, `useOnUserCreatedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useOnUserCreatedSubscription({
- *   variables: {
- *   },
- * });
- */
-export function useOnUserCreatedSubscription(baseOptions?: Apollo.SubscriptionHookOptions<OnUserCreatedSubscription, OnUserCreatedSubscriptionVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<OnUserCreatedSubscription, OnUserCreatedSubscriptionVariables>(OnUserCreatedDocument, options);
-      }
-export type OnUserCreatedSubscriptionHookResult = ReturnType<typeof useOnUserCreatedSubscription>;
-export type OnUserCreatedSubscriptionResult = Apollo.SubscriptionResult<OnUserCreatedSubscription>;
 export const LoginDocument = gql`
     mutation Login($input: LoginInput!) {
   login(input: $input) {
@@ -726,6 +573,36 @@ export function useAddCalculationMutation(baseOptions?: Apollo.MutationHookOptio
 export type AddCalculationMutationHookResult = ReturnType<typeof useAddCalculationMutation>;
 export type AddCalculationMutationResult = Apollo.MutationResult<AddCalculationMutation>;
 export type AddCalculationMutationOptions = Apollo.BaseMutationOptions<AddCalculationMutation, AddCalculationMutationVariables>;
+export const CommunicationUpdatedDocument = gql`
+    subscription CommunicationUpdated($communicationId: ID!) {
+  communicationUpdated(communicationId: $communicationId) {
+    ...CommunicationFields
+  }
+}
+    ${CommunicationFieldsFragmentDoc}`;
+
+/**
+ * __useCommunicationUpdatedSubscription__
+ *
+ * To run a query within a React component, call `useCommunicationUpdatedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useCommunicationUpdatedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommunicationUpdatedSubscription({
+ *   variables: {
+ *      communicationId: // value for 'communicationId'
+ *   },
+ * });
+ */
+export function useCommunicationUpdatedSubscription(baseOptions: Apollo.SubscriptionHookOptions<CommunicationUpdatedSubscription, CommunicationUpdatedSubscriptionVariables> & ({ variables: CommunicationUpdatedSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<CommunicationUpdatedSubscription, CommunicationUpdatedSubscriptionVariables>(CommunicationUpdatedDocument, options);
+      }
+export type CommunicationUpdatedSubscriptionHookResult = ReturnType<typeof useCommunicationUpdatedSubscription>;
+export type CommunicationUpdatedSubscriptionResult = Apollo.SubscriptionResult<CommunicationUpdatedSubscription>;
 export const CommunicationCreatedDocument = gql`
     subscription CommunicationCreated {
   communicationCreated {
@@ -785,53 +662,6 @@ export function useCalculationAddedSubscription(baseOptions: Apollo.Subscription
       }
 export type CalculationAddedSubscriptionHookResult = ReturnType<typeof useCalculationAddedSubscription>;
 export type CalculationAddedSubscriptionResult = Apollo.SubscriptionResult<CalculationAddedSubscription>;
-export const CommunicationUpdatedDocument = gql`
-    subscription CommunicationUpdated($communicationId: ID!) {
-  communicationUpdated(communicationId: $communicationId) {
-    ...CommunicationFields
-  }
-}
-    ${CommunicationFieldsFragmentDoc}`;
-
-/**
- * __useCommunicationUpdatedSubscription__
- *
- * To run a query within a React component, call `useCommunicationUpdatedSubscription` and pass it any options that fit your needs.
- * When your component renders, `useCommunicationUpdatedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useCommunicationUpdatedSubscription({
- *   variables: {
- *      communicationId: // value for 'communicationId'
- *   },
- * });
- */
-export function useCommunicationUpdatedSubscription(baseOptions: Apollo.SubscriptionHookOptions<CommunicationUpdatedSubscription, CommunicationUpdatedSubscriptionVariables> & ({ variables: CommunicationUpdatedSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useSubscription<CommunicationUpdatedSubscription, CommunicationUpdatedSubscriptionVariables>(CommunicationUpdatedDocument, options);
-      }
-export type CommunicationUpdatedSubscriptionHookResult = ReturnType<typeof useCommunicationUpdatedSubscription>;
-export type CommunicationUpdatedSubscriptionResult = Apollo.SubscriptionResult<CommunicationUpdatedSubscription>;
-export type UserFieldsFragment = { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string };
-
-export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetAllUsersQuery = { __typename?: 'Query', allUsers: Array<{ __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string }> };
-
-export type GetAllRolesQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetAllRolesQuery = { __typename?: 'Query', allRoles: Array<{ __typename?: 'Role', id: string, name: string, users: Array<{ __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string }> }> };
-
-export type OnUserCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
-
-
-export type OnUserCreatedSubscription = { __typename?: 'Subscription', userCreated?: { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string } | null };
-
 export type LoginMutationVariables = Exact<{
   input: LoginInput;
 }>;
@@ -850,6 +680,8 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string } | null };
+
+export type UserFieldsFragment = { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string };
 
 export type AllCommunicationsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -884,6 +716,17 @@ export type AddCalculationMutationVariables = Exact<{
 
 export type AddCalculationMutation = { __typename?: 'Mutation', addCalculation: { __typename?: 'Calculation', id: string, leftOperand: number, operation: Operation, rightOperand: number, result: number, createdAt: string, parentCalculationId?: string | null, author: { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string } } };
 
+export type CommunicationFieldsFragment = { __typename?: 'Communication', id: string, startingNumber: number, title?: string | null, currentResult: number, calculationCount: number, participantCount: number, createdAt: string, updatedAt: string, calculations: Array<{ __typename?: 'Calculation', id: string, leftOperand: number, operation: Operation, rightOperand: number, result: number, createdAt: string, parentCalculationId?: string | null, author: { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string } }>, author: { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string } };
+
+export type CalculationFieldsFragment = { __typename?: 'Calculation', id: string, leftOperand: number, operation: Operation, rightOperand: number, result: number, createdAt: string, parentCalculationId?: string | null, author: { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string } };
+
+export type CommunicationUpdatedSubscriptionVariables = Exact<{
+  communicationId: Scalars['ID']['input'];
+}>;
+
+
+export type CommunicationUpdatedSubscription = { __typename?: 'Subscription', communicationUpdated: { __typename?: 'Communication', id: string, startingNumber: number, title?: string | null, currentResult: number, calculationCount: number, participantCount: number, createdAt: string, updatedAt: string, calculations: Array<{ __typename?: 'Calculation', id: string, leftOperand: number, operation: Operation, rightOperand: number, result: number, createdAt: string, parentCalculationId?: string | null, author: { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string } }>, author: { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string } } };
+
 export type CommunicationCreatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -895,14 +738,3 @@ export type CalculationAddedSubscriptionVariables = Exact<{
 
 
 export type CalculationAddedSubscription = { __typename?: 'Subscription', calculationAdded: { __typename?: 'Calculation', id: string, leftOperand: number, operation: Operation, rightOperand: number, result: number, createdAt: string, parentCalculationId?: string | null, author: { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string } } };
-
-export type CommunicationUpdatedSubscriptionVariables = Exact<{
-  communicationId: Scalars['ID']['input'];
-}>;
-
-
-export type CommunicationUpdatedSubscription = { __typename?: 'Subscription', communicationUpdated: { __typename?: 'Communication', id: string, startingNumber: number, title?: string | null, currentResult: number, calculationCount: number, participantCount: number, createdAt: string, updatedAt: string, calculations: Array<{ __typename?: 'Calculation', id: string, leftOperand: number, operation: Operation, rightOperand: number, result: number, createdAt: string, parentCalculationId?: string | null, author: { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string } }>, author: { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string } } };
-
-export type CommunicationFieldsFragment = { __typename?: 'Communication', id: string, startingNumber: number, title?: string | null, currentResult: number, calculationCount: number, participantCount: number, createdAt: string, updatedAt: string, calculations: Array<{ __typename?: 'Calculation', id: string, leftOperand: number, operation: Operation, rightOperand: number, result: number, createdAt: string, parentCalculationId?: string | null, author: { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string } }>, author: { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string } };
-
-export type CalculationFieldsFragment = { __typename?: 'Calculation', id: string, leftOperand: number, operation: Operation, rightOperand: number, result: number, createdAt: string, parentCalculationId?: string | null, author: { __typename?: 'User', id: string, username: string, email: string, isActive: boolean, createdAt: string, updatedAt: string } };

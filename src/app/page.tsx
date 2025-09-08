@@ -21,13 +21,10 @@ export default function Home() {
   const [selectedCommunication, setSelectedCommunication] = useState<Communications[0] | null>(null);
   const [showExplore, setShowExplore] = useState(false);
 
-  // Handle URL parameter for selected communication
   useEffect(() => {
     const commId = searchParams.get('comm');
     if (commId) {
-      // Create a temporary communication object with just the ID
       setSelectedCommunication({ id: commId } as Communications[0]);
-      // Also show explore mode for guests if they have a direct link
       if (!isAuthenticated) {
         setShowExplore(true);
       }
@@ -57,7 +54,6 @@ export default function Home() {
   };
 
   const handleCommunicationClick = (communication: Communications[0]) => {
-    // Update URL parameter instead of just state
     const url = new URL(window.location.href);
     url.searchParams.set('comm', communication.id);
     router.push(url.pathname + url.search);
@@ -65,37 +61,27 @@ export default function Home() {
   };
 
   const handleBackToList = () => {
-    // Remove URL parameter
     const url = new URL(window.location.href);
     url.searchParams.delete('comm');
     router.push(url.pathname + (url.search ? url.search : ''));
     setSelectedCommunication(null);
   };
 
-  const handleCommunicationCreated = () => {
-    // The list will automatically update via subscription
-  };
-
   const handleLogoClick = () => {
     if (!isAuthenticated) {
-      // For guests, go to home screen (landing page)
       setShowExplore(false);
       setSelectedCommunication(null);
-      // Remove URL parameter
       const url = new URL(window.location.href);
       url.searchParams.delete('comm');
       router.push(url.pathname);
     } else {
-      // For authenticated users, go to communications list
       setSelectedCommunication(null);
-      // Remove URL parameter
       const url = new URL(window.location.href);
       url.searchParams.delete('comm');
       router.push(url.pathname);
     }
   };
 
-  // Show communication detail if one is selected
   if (selectedCommunication) {
     return (
       <CommunicationDetail
@@ -147,7 +133,6 @@ export default function Home() {
                 </button>
                   </div>
 
-              {/* Features */}
               <div className="grid md:grid-cols-3 gap-8 mt-20">
                 <div className="text-center">
                   <div className="inline-flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg mb-4">
@@ -176,7 +161,6 @@ export default function Home() {
             </div>
         </div>
         ) : (
-          // Communications list for authenticated users or guests in explore mode
           <div className="py-8">
             <CommunicationList 
               onCommunicationClick={handleCommunicationClick}
@@ -186,18 +170,15 @@ export default function Home() {
         )}
       </main>
 
-      {/* Auth Modal */}
       <AuthModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         defaultMode={authMode}
       />
 
-      {/* Create Communication Modal */}
       <CreateCommunicationModal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
-        onCreated={handleCommunicationCreated}
       />
     </div>
   );
