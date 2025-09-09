@@ -48,8 +48,8 @@ export const CreateCommunicationModal: React.FC<CreateCommunicationModalProps> =
         onCreated?.();
         onClose();
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to create communication');
+    } catch (err) {
+      setError((err as Error).message || 'Failed to create communication');
     }
   };
 
@@ -178,7 +178,7 @@ export const CreateCommunicationModal: React.FC<CreateCommunicationModalProps> =
                   </div>
                   {formData.title && (
                     <div className="mt-1">
-                      <span className="text-sm text-blue-700">Title: "{formData.title}"</span>
+                      <span className="text-sm text-blue-700">Title: &quot;{formData.title}&quot;</span>
                     </div>
                   )}
                 </div>

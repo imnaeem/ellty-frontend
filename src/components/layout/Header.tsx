@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Calculator, LogOut, User, Plus } from 'lucide-react';
+import { Calculator, LogOut, User } from 'lucide-react';
 
 interface HeaderProps {
   onAuthClick?: (mode: 'login' | 'register') => void;
