@@ -101,7 +101,9 @@ const getLink = (API_URL: string, WS_URL: string) => {
 const apolloClient = new ApolloClient({
   link: getLink(API_URL, WS_URL),
   cache: new InMemoryCache(),
-  connectToDevTools: true,
+  devtools: {
+    enabled: true,
+  },
 });
 
 export default apolloClient;
